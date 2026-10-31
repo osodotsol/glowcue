@@ -14,6 +14,11 @@ Implement the full GlowCue API surface from `docs/API_CONTRACTS.md` in **mock mo
    - `YOUCAM_API_KEY` (optional `SecretStr`; required when live)
    - `LIVE_ANALYSIS_ENABLED`, `MAX_LIVE_PER_DAY=25`, `PER_IP_PER_DAY=5`, `CREDIT_FLOOR=100`
    - `FRONTEND_ORIGIN`, `CURRENCY="NGN"`, `BUDGET_DEFAULT=30000`, `RESULT_TTL_SECONDS=1800`
+   **Security requirements B1, B4 and B6 (from the PR #1 review; see `docs/SECURITY_PRIVACY.md` §4.4):**
+   - **B1:** make `backend/.env` the authority for `YOUCAM_MODE` and `LIVE_ANALYSIS_ENABLED` by customising the settings sources so dotenv values override process environment variables. Production has no `.env`, so Render's variables apply there.
+   - **B4:** log the effective mode, `live_analysis_enabled` and whether a key is present at startup, never the key.
+   - **B6:** `LIVE_ANALYSIS_ENABLED` defaults to `false`; the sample endpoint never calls YouCam.
+   - Tests: a `.env` value beats a conflicting environment variable (use a temporary env file, never the real one); defaults are mock and disabled.
 2. `app/models.py`: every model in DATA_MODEL (`Metric`, `NormalizedAnalysis`, `Preferences`, `Product`, `RecommendationResult`, `Receipt`, `Step`, cart models, `ErrorBody`).
 3. `app/errors.py`: an `AppError` exception plus a handler rendering `{"error": {code, message, retryable}}`.
 4. `services/results_store.py` (cachetools TTLCache, single process) and `services/limits.py` (per-IP and global daily counters, kill switch; the credit-floor hook comes later in prompt 03).

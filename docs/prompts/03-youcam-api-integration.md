@@ -10,6 +10,11 @@ Build the YouCam client exactly as documented, wire live mode behind all guards,
 
 ## Instructions
 1. Ask the `api-researcher` subagent to re-confirm the v2.1 request schema and the delete endpoint from the official docs (no calls).
+   **Security requirements B2, B3 and B5 (from the PR #1 review; see `docs/SECURITY_PRIVACY.md` §4.4):**
+   - **B2 (one choke point):** every YouCam request, including file registration, upload, task, poll, delete and credit, goes through a single method (for example `YouCamClient._send`) that first requires `youcam_mode == "live"` **and** `live_analysis_enabled` **and** a non-empty key **and** the daily caps **and** the credit floor. Nothing else may build an HTTP client for YouCam or mention the base URL.
+   - **B3:** in mock mode the client uses a mock transport or raises on any send; it must never construct a real transport.
+   - **B5 (tests):** a live-mode call without the enable flag is refused; mock mode raises on `send`; a source test asserts only the client module mentions the YouCam base URL.
+   - Remember the backend test suite is network-isolated (`backend/tests/conftest.py`): use `httpx.MockTransport`.
 2. `services/youcam_client.py` (httpx.AsyncClient, base `https://yce-api-01.makeupar.com`, Bearer from settings):
    - `register_file(size, content_type)`
    - `upload(presigned)`

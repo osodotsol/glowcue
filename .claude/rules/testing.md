@@ -10,6 +10,7 @@ paths:
 # Testing rules
 
 - **Test with every change:** every engine rule, normaliser mapping, validator and route gets at least one test. Fix bugs test-first: write the failing test, then the fix.
+- **The network and the real key are blocked in backend tests** by autouse fixtures in `backend/tests/conftest.py` (settings never read `backend/.env`; any non-loopback socket, DNS or real httpx transport raises `LiveRequestBlocked`). Never remove or bypass them; if a test needs HTTP, use `httpx.MockTransport`.
 - **Never call the network in tests.** Mock YouCam with `httpx.MockTransport`. Fixtures come from the sanitised recorded response in `backend/app/fixtures/`.
 - **Name tests after behaviour:** `test_<unit>_<behaviour>`, for example `test_optimiser_respects_budget`.
 - **Cover the edge cases** in `docs/RECOMMENDATION_ENGINE.md` §9.4 and the failure scenarios in `docs/TEST_PLAN.md`.

@@ -87,11 +87,32 @@ try:
     check(perms.get("disableBypassPermissionsMode") == "disable", "settings: bypass mode must be disabled")
     check(perms.get("defaultMode") != "bypassPermissions", "settings: defaultMode must not be bypassPermissions")
     check(any(".env" in r for r in perms.get("deny", [])), "settings: .env deny rules missing")
+    asks = set(perms.get("ask", []))
+    check(
+        "Bash(*makeupar.com*)" in asks and "Bash(*yce-api*)" in asks, "settings: native YouCam-host ask rules missing"
+    )
+    check(
+        "Edit(/.claude/hooks/**)" in asks and "Edit(/.claude/settings.json)" in asks,
+        "settings: native guardrail-file ask rules missing",
+    )
+    check(
+        "Edit(/.claude/settings.local.json)" in perms.get("deny", []), "settings: settings.local.json edit deny missing"
+    )
     for event, groups in settings.get("hooks", {}).items():
         for group in groups:
             for hook in group.get("hooks", []):
-                for script in re.findall(r"\.claude/hooks/[\w.]+\.py", hook.get("command", "")):
+                cmd = hook.get("command", "")
+                for script in re.findall(r"\.claude/hooks/[\w.]+\.py", cmd):
                     check((ROOT / script).is_file(), f"settings: {event} hook script missing: {script}")
+                if event == "PreToolUse":  # guards must fail closed
+                    check(
+                        hook.get("onFailure") == "block", f"settings: PreToolUse guard must set onFailure=block: {cmd}"
+                    )
+                    check(
+                        cmd.rstrip().endswith("|| exit 2"),
+                        f"settings: PreToolUse guard must end with '|| exit 2': {cmd}",
+                    )
+                    check("LIVE_APPROVED" not in cmd, "settings: self-approval token must not exist")
 except (OSError, json.JSONDecodeError) as exc:
     failures.append(f"settings.json invalid: {exc}")
 

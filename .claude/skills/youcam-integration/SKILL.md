@@ -32,7 +32,7 @@ Auth header: `Authorization: Bearer <key>`. Base URL `https://yce-api-01.makeupa
 ## Procedure: an owner-approved live run (probe or integration)
 1. Ask the owner in plain words: "This will spend about 14 units of your remaining N. Approve?" Wait for an explicit yes.
 2. Read the balance first. It's free, but the command still needs the approval token because it contacts the API host.
-3. Run `backend/.venv/Scripts/python backend/scripts/probe_youcam.py <photo>`. The command guard will put a **permission prompt in front of the owner**, and the run only proceeds if they approve it there. Nothing you add to the command can skip that prompt, and you must not try to.
+3. Run `backend/.venv/Scripts/python backend/scripts/probe_youcam.py <photo>`. The command guard will put a **permission prompt in front of the owner**, and the run only proceeds if they approve it there. Nothing you add to the command can skip that prompt, and you must not try to. The owner should choose the one-time "Yes", never "don't ask again".
 4. Read the balance again and record date, purpose, delta and result in `docs/YOUCAM_API.md` §6.8.
 5. **Sanitise** before anything is committed:
    - keep scores;

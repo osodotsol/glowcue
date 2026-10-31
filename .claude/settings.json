@@ -26,17 +26,37 @@
       "Bash(gh pr close*)",
       "Bash(gh api*)",
       "Bash(npm install*)",
-      "Bash(pip install*)"
+      "Bash(pip install*)",
+      "Bash(*makeupar.com*)",
+      "Bash(*yce-api*)",
+      "Bash(*YOUCAM_MODE=live*)",
+      "PowerShell(*makeupar.com*)",
+      "PowerShell(*yce-api*)",
+      "Edit(/.claude/hooks/**)",
+      "Edit(/.claude/settings.json)",
+      "Edit(/.githooks/**)",
+      "Edit(/scripts/security/**)",
+      "Edit(/scripts/tests/test_security_guards.py)",
+      "Edit(/scripts/validate_project.py)",
+      "Edit(/.github/workflows/**)",
+      "Edit(/.gitignore)"
     ],
     "deny": [
       "Read(**/.env)",
       "Read(**/.env.local)",
       "Read(**/.env.development)",
       "Read(**/.env.production)",
+      "Read(**/.env.test)",
+      "Read(**/.env.staging)",
+      "Read(**/*.env)",
       "Edit(**/.env)",
       "Edit(**/.env.local)",
       "Edit(**/.env.development)",
       "Edit(**/.env.production)",
+      "Edit(**/.env.test)",
+      "Edit(**/.env.staging)",
+      "Edit(**/*.env)",
+      "Edit(/.claude/settings.local.json)",
       "Bash(gh pr merge*)",
       "Bash(gh repo delete*)",
       "Bash(gh repo edit*)",
@@ -47,11 +67,13 @@
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "Bash|PowerShell",
+        "matcher": "Bash|PowerShell|Monitor",
         "hooks": [
           {
             "type": "command",
-            "command": "python \"${CLAUDE_PROJECT_DIR}/.claude/hooks/guard_bash.py\"",
+            "shell": "bash",
+            "command": "python \"${CLAUDE_PROJECT_DIR}/.claude/hooks/guard_bash.py\" || exit 2",
+            "onFailure": "block",
             "timeout": 15,
             "statusMessage": "GlowCue command guard"
           }
@@ -62,7 +84,9 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python \"${CLAUDE_PROJECT_DIR}/.claude/hooks/guard_edits.py\"",
+            "shell": "bash",
+            "command": "python \"${CLAUDE_PROJECT_DIR}/.claude/hooks/guard_edits.py\" || exit 2",
+            "onFailure": "block",
             "timeout": 15,
             "statusMessage": "GlowCue secret guard"
           }

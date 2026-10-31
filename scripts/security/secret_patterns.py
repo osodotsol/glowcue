@@ -58,6 +58,27 @@ PHOTO_EXTENSIONS = {".jpg", ".jpeg", ".heic", ".heif", ".webp"}
 PHOTO_ALLOWED_PREFIXES = ("frontend/public/products/", "docs/screenshots/", ".github/")
 
 
+# ---- Guardrail files ---------------------------------------------------------------------------
+# Changing any of these, by ANY route (Edit/Write tools, shell redirects, interpreters, git apply,
+# patch, tee ...), must be a human decision. Single source of truth for guard_bash.py and
+# guard_edits.py. Matched as substrings of command text or file paths.
+PROTECTED_PATH_PATTERNS: tuple[re.Pattern[str], ...] = (
+    # .claude/ except the ordinary content folders; covers hooks/, settings*.json, agent-memory, ~/.claude/...
+    re.compile(r"(^|[^\w.-])\.claude(?![\\/]+(?:skills|rules|agents)\b)", re.I),
+    re.compile(r"(^|[^\w.-])\.githooks\b", re.I),
+    re.compile(r"scripts[\\/]+security\b", re.I),
+    re.compile(r"scripts[\\/]+tests[\\/]+test_security_guards", re.I),
+    re.compile(r"scripts[\\/]+validate_project", re.I),
+    re.compile(r"\.github[\\/]+workflows\b", re.I),
+    re.compile(r"(^|[^\w.-])\.gitignore\b", re.I),
+    re.compile(r"hooksPath", re.I),  # `git config core.hooksPath` would disable the pre-commit scan
+)
+
+
+def protected_path_match(text: str) -> bool:
+    return any(p.search(text) for p in PROTECTED_PATH_PATTERNS)
+
+
 def scan_text(text: str) -> list[Finding]:
     findings: list[Finding] = []
     for lineno, line in enumerate(text.splitlines(), start=1):

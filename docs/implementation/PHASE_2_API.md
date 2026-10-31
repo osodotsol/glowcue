@@ -9,6 +9,7 @@
 - [ ] The balance is read before and after (free) and recorded in [YOUCAM_API §6.8](../YOUCAM_API.md).
 
 ## Acceptance checks
+- [ ] **Security B2/B3/B5:** one choke point enforces mode + enable flag + key + caps + credit floor; mock mode never builds a real transport; tests prove both. See [SECURITY_PRIVACY §4.4](../SECURITY_PRIVACY.md).
 - [ ] Client unit tests (MockTransport): success, every mapped error, 429 retry, timeout, unknown type.
 - [ ] Probe completed. Every [U] in YOUCAM_API §6.4–6.5 resolved or given a documented workaround (`skin_type` shape, mask format and size, delete endpoint, real unit cost).
 - [ ] Sanitised fixture committed (`sample_analysis.json`, masks). Raw output only in the gitignored `fixtures/raw/`.

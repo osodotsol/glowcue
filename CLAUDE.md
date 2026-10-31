@@ -24,15 +24,15 @@
 ## Using subagents
 Use a reviewer agent when an **independent** view adds value: before a PR (`pr-reviewer`, plus `security-reviewer` when touching uploads, config or secrets), or after a large UI phase (`frontend-reviewer`). Don't spawn agents for routine work. Reviewers never edit files. The main session decides and integrates.
 
-## Guardrails already enforced (see `docs/SECURITY_PRIVACY.md`)
-- Permission rules deny reading or editing `.env` files, force-push, `gh pr merge` and repo edits. Pushes and PR creation ask first.
-- Hooks block the following:
-  - secret-looking content in edits;
-  - commands that read `.env`, dump the environment, skip git hooks or run destructive resets;
-  - nothing for live YouCam calls; instead they **ask**. Any command that could reach YouCam (API host, probe script, `YOUCAM_MODE=live`, scripts containing YouCam client code) triggers a permission prompt **the owner** must approve. No token or variable bypasses it. Ask in chat first, and never reshape a command to avoid the prompt.
-  - nothing for guardrail-file changes either; they also **ask**. Edits to `.claude/hooks/`, `.claude/settings*.json`, `.githooks/` or `scripts/security/` require the owner's prompt approval.
-- Python files are auto-formatted with ruff after edits.
-- The git pre-commit hook (`.githooks/pre-commit`) and CI rerun the secret scan.
+## Guardrails (best-effort layers, NOT a sandbox; full detail and known limits in `docs/SECURITY_PRIVACY.md`)
+- **Deny:** permission rules and hooks refuse to read or write env files, dump the environment, skip git hooks, force-push, merge PRs, edit repo settings or run destructive resets, and refuse secret-looking content in edits and commands.
+- **Ask (a real prompt only the owner can answer):**
+  - any command that could reach YouCam or switch the backend to live mode: the API host, the probe script, `YOUCAM_MODE` and `LIVE_ANALYSIS_ENABLED`, `--env-file`, scripts or their imports containing YouCam client code, including when hidden behind `bash -c`, `timeout`, `xargs`, `uv run` and similar;
+  - any command or edit that could change a guardrail file: `.claude/hooks`, `.claude/settings*.json`, `.githooks/`, `scripts/security/`, the guard tests, the validator, CI workflows or `.gitignore`.
+- No token or variable bypasses a prompt. Ask in chat first, and never reshape a command to avoid one.
+- **Fail closed:** a crashing or missing guard blocks the action; malformed input asks.
+- **Not covered:** obfuscated or constructed commands, config-driven calls, and deliberate test tampering. The backend must therefore enforce live mode itself (`docs/SECURITY_PRIVACY.md` §4.4). Backend tests are network-isolated and never see the real key.
+- Python files are auto-formatted with ruff after edits. The git pre-commit hook and CI rerun the secret scan.
 
 If a guard blocks you, don't hunt for a workaround. Explain why it was blocked and ask the owner.
 
