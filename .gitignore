@@ -1,0 +1,48 @@
+# ---------- Secrets & local environment (never commit) ----------
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
+*.pem
+*.key
+secrets/
+
+# ---------- Private photographs & raw API output (may contain personal data) ----------
+private/
+test_assets/private/
+backend/app/fixtures/raw/
+*.raw.json
+
+# ---------- Claude Code personal settings ----------
+.claude/settings.local.json
+.claude/agent-memory-local/
+CLAUDE.local.md
+
+# ---------- Python ----------
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+*.egg-info/
+
+# ---------- Node / frontend ----------
+node_modules/
+dist/
+*.local
+.vite/
+coverage/
+playwright-report/
+test-results/
+frontend/e2e/.auth/
+
+# ---------- OS / editors ----------
+.DS_Store
+Thumbs.db
+.idea/
+*.swp
