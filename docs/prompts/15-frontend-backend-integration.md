@@ -14,7 +14,7 @@ Prove the whole journey end to end: first in mock mode, then with **one owner-ap
 3. Add Playwright (ask before installing; then `npx playwright install chromium`) and `frontend/e2e/smoke.spec.ts` in mock mode: landing → sample → results (heatmap visible) → routine (change budget) → add to cart → checkout → clear data.
 4. **Live run:**
    - ask the owner: "Approve 1 live analysis (~14 units) with your selfie?";
-   - after a yes, the owner sets `YOUCAM_MODE=live` in `backend/.env` (or you run `GLOWCUE_LIVE_APPROVED=1 YOUCAM_MODE=live …`);
+   - after a yes, the owner sets `YOUCAM_MODE=live` in `backend/.env`. Alternatively you run `YOUCAM_MODE=live …`, which makes the guard show the owner a permission prompt they must approve;
    - upload through the UI and complete the journey;
    - record the units delta and duration;
    - switch back to mock.

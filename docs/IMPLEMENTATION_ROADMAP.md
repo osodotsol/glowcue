@@ -2,7 +2,17 @@
 
 > **Status:** planned design from the GlowCue blueprint (research snapshot 31 Oct 2026). Nothing here is implemented unless [PROJECT_STATUS](PROJECT_STATUS.md) says so. Tags: **[V]** verified, **[A]** assumption, **[R]** recommendation, **[U]** unresolved.
 
-## 10. Chronological development roadmap
+> **Which document is authoritative?** (added after the PR #1 review)
+> | Question | Authoritative source |
+> |---|---|
+> | What exactly must this task do, and how is it verified? | the task's prompt in [prompts/](prompts/README.md), plus its phase gate in [implementation/](implementation/README.md) |
+> | When should it happen, and what gets cut if we're late? | **§18 timeline** in this file |
+> | What could go wrong? | **§19 risk register** in this file |
+> | Where are we right now? | [PROJECT_STATUS.md](PROJECT_STATUS.md) |
+>
+> **§10 below is the original planning narrative (historical).** Its phase numbers (0–13) predate the final phase plan (0–7) and the 22 prompts. Where §10 disagrees with a prompt or phase gate, the prompt or gate wins.
+
+## 10. Chronological development roadmap (historical planning narrative)
 
 Times are WAT. Hours are focused working time.
 
@@ -129,22 +139,22 @@ Run the compliance checklist ([§21](SUBMISSION_CHECKLIST.md)) and **click Submi
 | Milestone | Start | Duration | Output | Completion criteria | Contingency |
 |---|---|---|---|---|---|
 | M0 Accounts & key | Sat 16:30 | 1.5 h | Key, repo, draft, decisions | Balance 1,000 visible | If the code fails: mock-mode build continues; escalate by email |
-| M1 Docs + scaffold (P1–P2) | Sat 18:00 | 1.5 h | Repo skeleton, docs | Health endpoint works | — |
-| M2 Live probe + fixture (P3 probe, P4) | Sat 18:30 | 1.5 h | Fixture, YOUCAM_NOTES | All [U] resolved | Use the documented sample JSON as the provisional fixture |
-| M3 Catalogue + engine + routine (P5–P7) | Sat 20:00 | 4.5 h | Tested engine | pytest green | Drop alternatives (F9) if late |
+| M1 Docs + scaffold ([01](prompts/01-project-foundation.md)) | Sat 18:00 | 1.5 h | Repo skeleton, docs | Health endpoint works | — |
+| M2 Live probe + fixture ([03](prompts/03-youcam-api-integration.md), [04](prompts/04-response-normalization.md)) | Sat 18:30 | 1.5 h | Fixture, YOUCAM_NOTES | All [U] resolved | Use the documented sample JSON as the provisional fixture |
+| M3 Catalogue + engine + routine ([05](prompts/05-product-catalogue.md)–[07](prompts/07-routine-builder.md)) | Sat 20:00 | 4.5 h | Tested engine | pytest green | Drop alternatives (F9) if late |
 | Sleep | Sat 00:30 | 6 h | — | — | — |
-| M4 Backend routes finish (P3 routes) | Sun 07:00 | 1 h | API complete in mock | Route tests green | — |
-| M5 Frontend core (P8–P11) | Sun 08:00 | 5 h | Landing → Results | Mock journey to Results | Simplify heatmap to a single overlay toggle |
+| M4 Backend routes finish ([02](prompts/02-backend-architecture.md)) | Sun 07:00 | 1 h | API complete in mock | Route tests green | — |
+| M5 Frontend core ([08](prompts/08-frontend-design-system.md)–[12](prompts/12-heatmaps.md)) | Sun 08:00 | 5 h | Landing → Results | Mock journey to Results | Simplify heatmap to a single overlay toggle |
 | Break | Sun 13:00 | 0.75 h | — | — | — |
-| M6 Frontend commerce (P12–P13) | Sun 13:45 | 3.75 h | Routine, Cart, Checkout | Mock journey complete | Cut the product drawer to inline details |
-| M7 Integration live (P14) | Sun 17:30 | 2 h | Live journey | Real selfie → checkout | — |
-| **M8 Deploy (P17)** | Sun 19:30 | 1.5 h | Public URLs | Phone test passes | Fallback: single Render service |
+| M6 Frontend commerce ([13](prompts/13-product-recommendations.md)–[14](prompts/14-cart.md)) | Sun 13:45 | 3.75 h | Routine, Cart, Checkout | Mock journey complete | Cut the product drawer to inline details |
+| M7 Integration live ([15](prompts/15-frontend-backend-integration.md)) | Sun 17:30 | 2 h | Live journey | Real selfie → checkout | — |
+| **M8 Deploy ([18](prompts/18-deployment.md))** | Sun 19:30 | 1.5 h | Public URLs | Phone test passes | Fallback: single Render service |
 | **Feature freeze** | Sun 21:00 | — | — | — | — |
 | M9 Refine + QA (Antigravity, P15–P16) | Sun 21:00 | 2 h | Fixes | No P0/P1 | — |
 | Sleep | Sun 23:00 | 7 h | — | — | — |
-| M10 Final QA + docs (P18) | Mon 06:30 | 1.5 h | README | Fresh-clone test passes | — |
-| M11 Screenshots + video (P19–P20) | Mon 08:00 | 2.5 h | YouTube link | Public, ≤ 3 min | Shorter, single-take video |
-| M12 Devpost (P21) | Mon 10:30 | 1.5 h | Complete draft | All fields filled | — |
+| M10 Final QA + docs ([16](prompts/16-testing.md), [17](prompts/17-security-review.md), [20](prompts/20-documentation.md)) | Mon 06:30 | 1.5 h | README | Fresh-clone test passes | — |
+| M11 Screenshots + video ([21](prompts/21-demo-production.md)) | Mon 08:00 | 2.5 h | YouTube link | Public, ≤ 3 min | Shorter, single-take video |
+| M12 Devpost ([22](prompts/22-devpost-submission.md)) | Mon 10:30 | 1.5 h | Complete draft | All fields filled | — |
 | M13 Final check + **SUBMIT** | Mon 12:00 | 2 h | Submitted | Status "Submitted" | — |
 | Contingency | Mon 14:00 | 3 h 45 min | — | — | Only critical fixes |
 

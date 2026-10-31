@@ -11,7 +11,7 @@
 | Frontend unit | `imagePrep`, formatters | Vitest | Green |
 | Mock-mode e2e | full journey | Playwright smoke | Green before every deploy |
 | Live verification | 1 local (Phase 6) + 1 prod (Phase 9) + 1 final (Mon 12:00) | Manual | Balance decreases by 14 each |
-| Failure scenarios | listed in P15 | Manual + tests | Each shows the correct UI |
+| Failure scenarios | listed in [prompt 16](prompts/16-testing.md) | Manual + tests | Each shows the correct UI |
 | Security | secret scan, headers, limits | grep, `pip-audit`, `npm audit`; GitHub push protection (on by default for public repos) | No high findings |
 | Privacy | EXIF absent (check with an online-free local tool such as `exiftool` or Pillow), no images in logs or disk, clear-data works | Manual | Pass |
 | Mobile | real phone on mobile data: Android Chrome + iOS Safari if available | Manual + Antigravity viewports | No P0/P1 |

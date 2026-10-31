@@ -29,8 +29,8 @@
 
 | # | Decision | Options | My recommendation & consequence |
 |---|---|---|---|
-| **F1** | Positioning & currency | (a) Global, USD; (b) **Budget-first shoppers, launching in Nigeria, NGN + "no-bleach promise"** | **(b).** A more specific and credible Impact story, and a differentiator. The cost is NGN-only prices; judges still understand. |
-| **F2** | Catalogue type | (a) **Fictional labelled demo**; (b) real products | **(a).** Avoids trademark issues in the video and unverifiable prices. |
+| **F1** | Positioning & currency | **DECIDED (provisional default, 31 Oct 2026):** budget-first shoppers, launching in Nigeria, NGN, plus the no-bleach promise. See [ADR-003](decisions/ADR-003-product-catalogue.md). | You may still revise it before Phase 3 (catalogue). |
+| **F2** | Catalogue type | **DECIDED (provisional default, 31 Oct 2026):** fictional, labelled "GlowCue Demo" products. See [ADR-003](decisions/ADR-003-product-catalogue.md). | Avoids trademark issues in the video and unverifiable prices. |
 | **F3** | Sample-mode photo | (a) **Your own selfie, published in the repo/app**; (b) a consenting friend with written consent; (c) sample shows masks and scores but **no photo** (masks over a neutral silhouette) | (a) if you're comfortable, since it's the best demo. (c) is the most private but a weaker visual. |
 | **F4** | Rising Star / Women in Tech eligibility | Are you an enrolled student with a school-issued email? Does any team member self-identify as a woman? | Opt in only if eligible. False info means disqualification. |
 | **F5** | Delete YouCam task after results | (a) **Yes, if verified in Phase 2**; (b) no | (a). A strong privacy claim. |

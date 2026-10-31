@@ -46,7 +46,7 @@ python scripts/security/check_secrets.py --all                          # secret
 - Only one writer works at a time. Hand over at a clean `git status` with a commit.
 
 ## Git
-- `main` is protected and only receives reviewed PRs. Work happens on `chore/*`, `docs/*`, `feat/*`, `fix/*` and `test/*` branches.
+- `main` receives only reviewed PRs, merged by the owner. **GitHub branch protection is not yet enabled.** Configure it right after PR #1 merges (require a PR and the 3 CI checks, block force-push). Until then this rule is enforced by convention and the agent permission rules. Work happens on `chore/*`, `docs/*`, `feat/*`, `fix/*` and `test/*` branches.
 - Use Conventional Commits (`feat: …`, `fix: …`).
 - Never force-push, merge PRs, skip hooks or change repo settings. Those are the owner's actions.
 

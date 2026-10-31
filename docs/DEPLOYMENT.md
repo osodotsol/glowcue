@@ -17,7 +17,7 @@
 
 **Steps:**
 1. Push to GitHub.
-2. Render → New Web Service → repo → root `backend` → build/start commands from P17 → env vars:
+2. Render → New Web Service → repo → root `backend` → build/start commands from [prompt 18](prompts/18-deployment.md) → env vars:
    - `YOUCAM_MODE=live`, `YOUCAM_API_KEY`, `LIVE_ANALYSIS_ENABLED=true`
    - `MAX_LIVE_PER_DAY=25`, `PER_IP_PER_DAY=5`, `CREDIT_FLOOR=100`
    - `FRONTEND_ORIGIN`, `CURRENCY`, `PYTHON_VERSION`

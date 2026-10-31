@@ -29,7 +29,8 @@ Use a reviewer agent when an **independent** view adds value: before a PR (`pr-r
 - Hooks block the following:
   - secret-looking content in edits;
   - commands that read `.env`, dump the environment, skip git hooks or run destructive resets;
-  - **live YouCam calls unless the command carries `GLOWCUE_LIVE_APPROVED=1`**. Add that only after the owner approves *that specific* call.
+  - nothing for live YouCam calls; instead they **ask**. Any command that could reach YouCam (API host, probe script, `YOUCAM_MODE=live`, scripts containing YouCam client code) triggers a permission prompt **the owner** must approve. No token or variable bypasses it. Ask in chat first, and never reshape a command to avoid the prompt.
+  - nothing for guardrail-file changes either; they also **ask**. Edits to `.claude/hooks/`, `.claude/settings*.json`, `.githooks/` or `scripts/security/` require the owner's prompt approval.
 - Python files are auto-formatted with ruff after edits.
 - The git pre-commit hook (`.githooks/pre-commit`) and CI rerun the secret scan.
 

@@ -28,7 +28,7 @@ Build the YouCam client exactly as documented, wire live mode behind all guards,
    - saves the raw JSON and masks to `backend/app/fixtures/raw/` (gitignored) with timing;
    - tries `delete_task` and reports the result;
    - never prints the key.
-6. **Stop and ask the owner:** "Approve one live probe (~14 units of N)?" Only after a clear yes, run `GLOWCUE_LIVE_APPROVED=1 backend/.venv/Scripts/python backend/scripts/probe_youcam.py <owner-provided photo path>`.
+6. **Stop and ask the owner:** "Approve one live probe (~14 units of N)?" Only after a clear yes, run `backend/.venv/Scripts/python backend/scripts/probe_youcam.py <owner-provided photo path>`. The command guard then shows the owner a **permission prompt**, which they must approve too. That's two human confirmations, and no token can replace them.
 7. Record in `docs/YOUCAM_API.md` §6.8: units delta, duration, the `skin_type` output shape, `region` presence, mask format and dimensions vs input, delete result. Flip the resolved [U] tags to [V].
 
 ## Expected files

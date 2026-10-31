@@ -9,7 +9,7 @@
 | Layer | Choice | Why | Cost |
 |---|---|---|---|
 | Backend | **Python 3.12+ / FastAPI / Uvicorn / httpx / Pillow / Pydantic v2** | Python is your strength; FastAPI is simple, typed and auto-documents | Free |
-| Frontend | **React 18 + Vite + TypeScript + Tailwind CSS v4** | Fast dev; TS catches agent mistakes; Tailwind lets agents style consistently | Free |
+| Frontend | **React 19 + Vite 8 + TypeScript 6 (strict) + Tailwind CSS v4** (versions as installed 31 Oct 2026; pinned in `frontend/package.json`) | Fast dev; TS catches agent mistakes; Tailwind lets agents style consistently | Free |
 | Routing / state | `react-router-dom` + React Context + `sessionStorage` (no images) | No Redux needed | Free |
 | Icons / fonts | Lucide (ISC), Google Fonts **Fraunces** (headings) + **Inter** (body), OFL | Licence-clean | Free |
 | Tests | pytest + FastAPI TestClient; Playwright (one e2e smoke) | Standard | Free |

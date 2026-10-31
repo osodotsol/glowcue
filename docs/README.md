@@ -17,9 +17,9 @@ This is the shared source of truth for the owner, Claude Code and Antigravity. *
 | | [SECURITY_PRIVACY.md](SECURITY_PRIVACY.md) | Controls, guardrails, permission model, incident response |
 | Operations | [DEPLOYMENT.md](DEPLOYMENT.md) | Hosting choice and deploy steps |
 | | [RUNBOOK.md](RUNBOOK.md) | How to run, operate, troubleshoot and release |
-| Delivery | [IMPLEMENTATION_ROADMAP.md](IMPLEMENTATION_ROADMAP.md) | Phases, timeline, critical path, cut list, risk register |
-| | [implementation/](implementation/README.md) | One gate document per phase |
-| | [prompts/](prompts/README.md) | One implementation prompt per task |
+| Delivery | [IMPLEMENTATION_ROADMAP.md](IMPLEMENTATION_ROADMAP.md) | Timeline (§18), cut list and risk register (§19) are authoritative; §10 is the historical planning narrative |
+| | [implementation/](implementation/README.md) | One gate document per phase (**authoritative** for acceptance checks) |
+| | [prompts/](prompts/README.md) | One implementation prompt per task (**authoritative** for task instructions) |
 | | [WORKFLOW.md](WORKFLOW.md) | How Claude Code and Antigravity share the work |
 | | [decisions/](decisions/) | Architecture Decision Records |
 | Submission | [SUBMISSION_CHECKLIST.md](SUBMISSION_CHECKLIST.md) | Verified hackathon rules and the final compliance checklist |

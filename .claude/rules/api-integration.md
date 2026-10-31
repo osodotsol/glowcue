@@ -18,7 +18,7 @@ paths:
 - **Never mix HD and SD actions.** The SD dark-circle key is `dark_circle_v2`.
 - **Timeouts and retries:** every call has a timeout. Retry only on 429 and 5xx, at most 2 retries, with exponential backoff and jitter. Never retry a task creation that may have succeeded; poll instead.
 - **Rate limits:** 250 requests per 300 s per IP and per token. Poll at ≥ 2 s intervals with a 90 s overall timeout.
-- **Mock mode is the default** (`YOUCAM_MODE=mock`). Live mode requires `YOUCAM_API_KEY`, passes the caps and the credit floor, and is exercised **only** after the owner approves each run. Agents prefix approved commands with `GLOWCUE_LIVE_APPROVED=1`.
+- **Mock mode is the default** (`YOUCAM_MODE=mock`). Live mode requires `YOUCAM_API_KEY`, passes the caps and the credit floor, and is exercised **only** after the owner approves each run. Approval is a real Claude Code permission prompt: the command guard returns `"ask"` for any command that could reach YouCam (API host, probe script, `YOUCAM_MODE=live`, or a script containing YouCam client code). No token or variable can pre-approve a call. Ask the owner in chat first, then let the prompt appear; never try to reshape a command so the prompt doesn't appear.
 - **Unit accounting:** before and after every approved live run, read the balance (`GET /s2s/v1.0/client/credit`, free) and record the delta in `docs/YOUCAM_API.md` §6.8.
 - **Validate responses defensively:** parse with Pydantic, tolerate unknown `type` values (log and skip) and treat missing ones as `not_measured`.
 - **Sanitise fixtures before committing:**

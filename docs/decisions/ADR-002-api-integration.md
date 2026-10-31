@@ -21,4 +21,5 @@ Maximum robustness and privacy for minimum units, in line with the organiser's g
 
 ## Consequences
 - One owner-approved live probe is needed early to capture the fixture and resolve the [U] items: `skin_type` shape, mask format and size, whether delete works, actual unit cost.
-- Agents need an explicit approval token (`GLOWCUE_LIVE_APPROVED=1`) for any live call (hook-enforced).
+- Every live call needs the **owner's approval in a Claude Code permission prompt**. The command guard returns `"ask"`, and in auto mode a hook "ask" goes to the human, not the classifier.
+- *Amended 31 Oct 2026 (PR #1 review, High finding):* the original design used an approval token (`GLOWCUE_LIVE_APPROVED=1`) in the command. The agent could type that itself, so it was a speed bump, not a gate, and it was removed.

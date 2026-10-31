@@ -3,6 +3,9 @@
 Blocks (exit 2) when:
   - the target is a real environment file (.env, .env.local, …), or
   - the new content contains something that looks like a secret.
+Asks the OWNER (JSON permissionDecision "ask") when:
+  - the target is a guardrail file (Claude Code hooks/settings, git hooks, secret scanner), so an agent
+    can never weaken the live-call gate or the secret checks without a human prompt.
 """
 
 from __future__ import annotations
@@ -19,6 +22,9 @@ sys.path.insert(
 from secret_patterns import scan_text  # noqa: E402
 
 ENV_FILE = re.compile(r"(^|[\\/])\.env(\.(?!example$)[^\\/]+)?$")
+PROTECTED_PATHS = re.compile(
+    r"(^|[\\/])(\.claude[\\/](hooks[\\/]|settings(\.local)?\.json$)|\.githooks[\\/]|scripts[\\/]security[\\/])", re.I
+)
 
 
 def collect_new_text(tool_input: dict) -> str:
@@ -54,6 +60,20 @@ def main() -> None:
             file=sys.stderr,
         )
         sys.exit(2)
+    if PROTECTED_PATHS.search(path):
+        print(
+            json.dumps(
+                {
+                    "hookSpecificOutput": {
+                        "hookEventName": "PreToolUse",
+                        "permissionDecision": "ask",
+                        "permissionDecisionReason": "GlowCue guard: this edits a guardrail file "
+                        "(hooks, settings, git hooks or secret scanner). Approve only if you requested it.",
+                    }
+                }
+            )
+        )
+        sys.exit(0)
     sys.exit(0)
 
 
