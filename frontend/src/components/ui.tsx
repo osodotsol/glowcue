@@ -262,14 +262,12 @@ export function SectionTitle({ eyebrow, title, children }: { eyebrow?: string; t
 
 // ------------------------------------------------------------------ photography
 /**
- * Temporary owner-supplied imagery (portraits, hero film) lives in frontend/public/private/ (git-ignored). Its licence
- * is not verified, so it is used ONLY by the local dev server. Production builds never reference it (this constant
- * is false there and the private branches are removed) and show cleared GlowCue Demo studio renders instead;
- * vite.config.ts and scripts/check-build-assets.mjs keep the files themselves out of dist/.
+ * Brand photography (two portraits) and the hero film live in frontend/public/brand/ and are published with the site.
+ * They are brand imagery only: never placed beside or over scores, and never presented as a customer or an analysed
+ * face. If a file cannot load, its slot falls back to the matching GlowCue studio render so the layout never breaks.
+ * frontend/public/private/ stays git-ignored, is deleted from dist/ by vite.config.ts and is never referenced.
  */
-export const USE_PRIVATE_ASSETS = import.meta.env.DEV;
-
-type PortraitSlot = "hero" | "consultation" | "storytelling";
+type PortraitSlot = "consultation" | "storytelling";
 type SceneName = "hero_still" | "night_still" | "gel_coral" | "cream_swirl" | "drops";
 const SCENE_ALT: Record<SceneName, string> = {
   hero_still: "GlowCue vitamin C serum, gel cleanser and barrier cream on a sunlit plinth, studio render",
@@ -278,17 +276,17 @@ const SCENE_ALT: Record<SceneName, string> = {
   cream_swirl: "Swirl of cream texture on a peach background, studio render",
   drops: "Serum droplets on a soft green background, studio render",
 };
-/** Cleared stand-ins for each temporary portrait (original GlowCue Demo renders in public/products/scenes). */
+const PORTRAIT_FILE: Record<PortraitSlot, string> = {
+  consultation: "p2-consultation.webp",
+  storytelling: "p3-storytelling.webp",
+};
+/** Studio renders shown only if a portrait fails to load. */
 const PORTRAIT_FALLBACK: Record<PortraitSlot, { scene: SceneName; position: string }> = {
-  hero: { scene: "hero_still", position: "62% 55%" },
   consultation: { scene: "cream_swirl", position: "50% 50%" },
   storytelling: { scene: "gel_coral", position: "50% 50%" },
 };
 
-/**
- * A temporary brand portrait in development; its cleared studio-render stand-in in production.
- * In development a missing file shows a note for the developer (never shown in production).
- */
+/** A brand portrait from /brand/portraits, or its studio-render stand-in if the file cannot be loaded. */
 export function Portrait({
   slot,
   alt,
@@ -302,37 +300,28 @@ export function Portrait({
   className?: string;
   eager?: boolean;
 }) {
-  const [missing, setMissing] = useState(false);
-  if (!USE_PRIVATE_ASSETS) {
+  const [failed, setFailed] = useState(false);
+  if (failed) {
     const fallback = PORTRAIT_FALLBACK[slot];
     return (
       <SceneImage name={fallback.scene} alt={SCENE_ALT[fallback.scene]} position={fallback.position} eager={eager} className={className} />
     );
   }
-  // Development only from here: file names never reach a production build.
-  const file = { hero: "p1-hero.webp", consultation: "p2-consultation.webp", storytelling: "p3-storytelling.webp" }[slot];
-  if (missing) {
-    return (
-      <div className={`flex items-center justify-center bg-peach p-6 text-center text-xs leading-relaxed text-terra-ink ${className}`}>
-        Portrait not found. Place <code className="mx-1">{file}</code> in frontend/public/private/portraits/
-      </div>
-    );
-  }
   return (
     <img
-      src={`/private/portraits/${file}`}
+      src={`/brand/portraits/${PORTRAIT_FILE[slot]}`}
       alt={alt}
       loading={eager ? "eager" : "lazy"}
       decoding="async"
       fetchPriority={eager ? "high" : "auto"}
-      onError={() => setMissing(true)}
+      onError={() => setFailed(true)}
       className={`h-full w-full object-cover ${className}`}
       style={{ objectPosition: position }}
     />
   );
 }
 
-const HERO_DIR = "/private/videos";
+const HERO_DIR = "/brand/videos";
 const REDUCED_MOTION = "(prefers-reduced-motion: reduce)";
 
 function useReducedMotion() {
@@ -347,28 +336,20 @@ function useReducedMotion() {
 }
 
 /**
- * Owner-supplied hero film (temporary, git-ignored in frontend/public/private/videos). Muted, looping, inline.
+ * The hero film (frontend/public/brand/videos). Muted, looping, inline.
  *
  * The source file carries baked-in white side bars (130 px left, ~34 px right of 1280 px), so the "frame" box
  * below is sized to the real 1116 x 720 picture and the video is oversized and shifted inside it to hide the bars.
  * The box fills the opening's height and `focusX` slides it horizontally, like object-position.
- * Reduced motion shows a still frame instead of the film; a missing file shows a placeholder.
+ * Reduced motion shows the poster frame instead of the film; if the film cannot load, the hero studio render is shown.
  */
 export function HeroVideo({ label, focusX = 50, className = "" }: { label: string; focusX?: number; className?: string }) {
   const reduced = useReducedMotion();
-  const [missing, setMissing] = useState(false);
-  if (!USE_PRIVATE_ASSETS) {
-    // Production: the cleared GlowCue Demo still life instead of the temporary film.
+  const [failed, setFailed] = useState(false);
+  if (failed) {
     return (
       <div className={`relative h-full w-full overflow-hidden bg-peach ${className}`}>
         <SceneImage name="hero_still" alt={SCENE_ALT.hero_still} position="78% 55%" eager />
-      </div>
-    );
-  }
-  if (missing) {
-    return (
-      <div className={`flex h-full items-center justify-center bg-peach p-6 text-center text-xs leading-relaxed text-terra-ink ${className}`}>
-        Hero film not found. Place <code className="mx-1">glowcue-hero.mp4</code> in frontend/public/private/videos/
       </div>
     );
   }
@@ -380,7 +361,7 @@ export function HeroVideo({ label, focusX = 50, className = "" }: { label: strin
         style={{ aspectRatio: "1116 / 720", left: `${focusX}%`, translate: `-${focusX}% 0` }}
       >
         {reduced ? (
-          <img src={`${HERO_DIR}/glowcue-hero-poster.webp`} alt="" decoding="async" onError={() => setMissing(true)} className={media} />
+          <img src={`${HERO_DIR}/glowcue-hero-poster.webp`} alt="" decoding="async" onError={() => setFailed(true)} className={media} />
         ) : (
           <video
             ref={(el) => {
@@ -397,7 +378,7 @@ export function HeroVideo({ label, focusX = 50, className = "" }: { label: strin
             disablePictureInPicture
             aria-hidden="true"
             tabIndex={-1}
-            onError={() => setMissing(true)}
+            onError={() => setFailed(true)}
             className={media}
           />
         )}

@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { Button, Chip, MicroLabel, Portrait, ProductImage, SceneImage, USE_PRIVATE_ASSETS } from "../components/ui";
+import { Button, Chip, MicroLabel, Portrait, ProductImage, SceneImage } from "../components/ui";
 import { formatPrice } from "../lib/format";
 import { CATEGORY_LABELS, type Category, type ConcernKey, type SkinType } from "../lib/types";
 import { CONSULT_STAGES, useApp } from "../state/AppState";
@@ -353,9 +353,6 @@ export function AboutYou() {
             alt="Woman with a white towel wrapped on her hair, fingertips framing her face, against a soft teal backdrop"
           />
         </div>
-        {USE_PRIVATE_ASSETS && (
-          <p className="-mt-3 text-[11px] leading-relaxed text-muted">Temporary owner-supplied photograph; brand imagery only.</p>
-        )}
         <nav aria-label="Consultation stages" className="rounded-[24px] bg-surface p-6">
           <MicroLabel className="text-sage">Your consultation</MicroLabel>
           <ol className="mt-4">

@@ -107,9 +107,11 @@ example the face too small or out of frame) come back with retake tips and the d
   the network.
 - **Logs stay clean.** Logs never contain the key, Authorization headers, presigned or result URLs, task ids or image
   bytes.
-- **Temporary imagery stays private.** `frontend/public/private/` holds temporary imagery for local development only.
-  It is git-ignored, never referenced by production builds, and removed from `dist/` on every build, where
-  `scripts/check-build-assets.mjs` fails the build if anything private remains.
+- **Brand imagery.** The two portraits and the hero film in `frontend/public/brand/` are published with the site by the
+  owner's decision (2 Nov 2026); their licence is not yet verified, see [docs/ASSETS.md](docs/ASSETS.md).
+  `frontend/public/private/` stays git-ignored and is removed from `dist/` on every build, and
+  `scripts/check-build-assets.mjs` fails the build if anything private reaches `dist/` or if `dist/brand/` is not
+  exactly the four approved files.
 
 More detail: [docs/SECURITY_PRIVACY.md](docs/SECURITY_PRIVACY.md).
 
