@@ -1,33 +1,224 @@
+@import "@fontsource-variable/fraunces/full.css";
+@import "@fontsource-variable/fraunces/full-italic.css";
+@import "@fontsource-variable/inter";
 @import "tailwindcss";
 
-/* GlowCue design tokens (docs/DESIGN_SYSTEM.md §8.1). Components use these; never raw hex. */
+/*
+ * GlowCue Edition 2 "The Ritual Edition" design tokens (design canvas, board 01).
+ * Components use these tokens; never raw hex. Contrast-checked pairs:
+ *   ink on bg 12:1 · muted on bg 5.6:1 · surface on terra-deep 5.1:1 · sage on bg 5.2:1.
+ * terra and sage-deco are accents only (they fail AA as small text).
+ */
 @theme {
-  --color-bg: #f7f3ee;
-  --color-surface: #ffffff;
-  --color-ink: #1f1d1b;
-  --color-muted: #6b645c;
-  --color-sage: #5e7a64;
-  --color-sage-soft: #e4ebe3;
-  --color-clay: #c47f5a;
-  --color-line: #e7e0d7;
+  --color-bg: #f7f1e9; /* warm ivory: page ground */
+  --color-surface: #fffcf8; /* porcelain: cards, sheets */
+  --color-peach: #ebd5c5; /* soft peach: plinths, highlights */
+  --color-sky: #dce7ee; /* dawn sky: morning-only accent */
+  --color-sand: #efe5da; /* quiet fills, tracks */
+  --color-line: #e4d8cb;
+  --color-line-strong: #d9cbbd;
 
-  --font-display: "Fraunces", Georgia, serif;
-  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --color-ink: #382c29; /* deep cocoa: text, evening */
+  --color-ink-soft: #4a3b36; /* evening cards, secondary text on light */
+  --color-muted: #6e5d56;
 
-  --radius-card: 1rem;
+  --color-terra: #c96f50; /* brand accent, large text only */
+  --color-terra-deep: #a9553a; /* every action */
+  --color-terra-ink: #7e3e29; /* terracotta text on light surfaces */
+  --color-terra-soft: #f6e1d3;
+
+  --color-sage: #5e6852; /* sage ink: text-safe */
+  --color-sage-deep: #3f4936;
+  --color-sage-deco: #87917a;
+  --color-sage-soft: #e4ebdf;
+
+  /* engine bands (always paired with a label and a number) */
+  --color-band-priority: #a9553a;
+  --color-band-watch: #c9a27e;
+  --color-band-good: #5e6852;
+
+  /* compatibility aliases used by first-prototype components */
+  --color-clay: #c96f50;
+  --color-clay-deep: #7e3e29;
+  --color-clay-soft: #f6e1d3;
+  --color-sand-deep: #c9a27e;
+
+  --font-display: "Fraunces Variable", Georgia, "Times New Roman", serif;
+  --font-sans: "Inter Variable", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --radius-card: 1.375rem; /* 22 px cards */
+  --radius-tile: 1.75rem; /* 28 px image tiles */
+
+  --ease-glow: cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
-body {
-  background-color: var(--color-bg);
-  color: var(--color-ink);
-  font-family: var(--font-sans);
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-terra-deep);
+    outline-offset: 3px;
+  }
+}
+
+@layer components {
+  /* Editorial display type: light Fraunces with the soft axis, tight tracking */
+  .display {
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-variation-settings: "SOFT" 50;
+    letter-spacing: -0.035em;
+    line-height: 0.95;
+  }
+  /* Spaced micro-labels (Sera influence) */
+  .micro {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    line-height: 1.4;
+  }
+}
+
+/* ---------- motion (storyboard: one easing; only opacity / transform / clip-path) ---------- */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.animate-rise {
+  animation: rise 600ms var(--ease-glow) both;
+}
+.animate-fade {
+  animation: fade 400ms var(--ease-glow) both;
+}
+/* Bag: bottom sheet on mobile, right-hand drawer from md (storyboard D) */
+@keyframes sheet-up {
+  from {
+    transform: translateY(100%);
+  }
+}
+@keyframes drawer-left {
+  from {
+    transform: translateX(100%);
+  }
+}
+.drawer-in {
+  animation: sheet-up 360ms var(--ease-glow) both;
+}
+@media (min-width: 48rem) {
+  .drawer-in {
+    animation-name: drawer-left;
+  }
+}
+/* Bag counter bump on every add (storyboard D) */
+@keyframes bump {
+  40% {
+    transform: scale(1.25);
+  }
+}
+.bag-bump {
+  animation: bump 320ms var(--ease-glow);
+}
+/* Glow arcs fill from empty to their real value (storyboard B) */
+@keyframes arc-fill {
+  from {
+    stroke-dasharray: 0 100;
+  }
+}
+.glow-arc {
+  animation: arc-fill 900ms var(--ease-glow) both;
+}
+/* Analysis overview segments grow left to right */
+@keyframes grow-x {
+  from {
+    transform: scaleX(0);
+  }
+}
+.band-seg {
+  transform-origin: left center;
+  animation: grow-x 700ms var(--ease-glow) both;
 }
 
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
   *,
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+/* Storyboard A: the hero arch opens on the portrait while the image settles */
+@keyframes arch-reveal {
+  from {
+    clip-path: inset(14% 12% 14% 12% round 220px 28px 28px 28px);
+  }
+  to {
+    clip-path: inset(0 round 220px 28px 28px 28px);
+  }
+}
+@keyframes settle {
+  from {
+    transform: scale(1.1);
+  }
+}
+.hero-arch {
+  animation: arch-reveal 1000ms var(--ease-glow) both;
+}
+.hero-arch img,
+.hero-arch .hero-frame {
+  animation: settle 1400ms var(--ease-glow) both;
+}
+
+/* Mobile navigation panel slides in from the left (reduced motion: instant, via the global override) */
+@keyframes menu-in {
+  from {
+    transform: translateX(-100%);
+  }
+}
+.menu-in {
+  animation: menu-in 420ms var(--ease-glow) both;
+}
+
+/* Page and AM/PM transitions (View Transitions API; browsers without it switch instantly) */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 320ms;
+  animation-timing-function: var(--ease-glow);
+}
+::view-transition-group(*) {
+  animation-duration: 450ms;
+  animation-timing-function: var(--ease-glow);
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
   }
 }

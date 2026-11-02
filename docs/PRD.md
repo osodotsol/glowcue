@@ -17,14 +17,16 @@
 
 ### 5.3 Core use cases
 - UC1: Analyse my skin from a selfie, or try the recorded sample.
-- UC2: Understand my top priorities and see where they show up (heatmap).
+- UC2: Understand my top priorities. *(Planned: see where they show up on a heatmap. **Not implemented:** the report shows scores only.)*
 - UC3: Set budget and preferences, and tell GlowCue what I already own.
 - UC4: Get a minimal AM/PM routine with reasons and a total.
 - UC5: Swap a product and see the total update.
 - UC6: Add the whole routine to the cart and preview checkout.
 
 ### 5.4 Customer journey
-Landing → (Try sample | Analyse my selfie) → Consent + upload → Processing (≈10–40 s **[A]**) → Results (priorities + heatmap) → Preferences (budget, own-already, fragrance-free, sensitive, routine size) → Your routine (AM / PM, receipts, coverage, total) → Cart → Checkout preview → "Start over / delete my session".
+Landing → (Try sample *(not built)* | Analyse my selfie) → Consent + upload → Processing (≈10–40 s **[A]**) → Results (priorities + scores) → Preferences (budget, own-already, fragrance-free, sensitive, routine size) → Your routine (AM / PM, receipts, coverage, total) → Cart → Checkout preview → "Start over / delete my session".
+
+*As built (1 Nov 2026): the consultation comes before the selfie, and analysis is either a labelled demo profile or a consented live YouCam analysis. The sample mode and heatmap were not built; see the [README](../README.md).*
 
 ### 5.5 Functional requirements
 
@@ -33,9 +35,9 @@ Landing → (Try sample | Analyse my selfie) → Consent + upload → Processing
 | F1 | Landing | Explain value, start the flow | CTA buttons | — | `GET /api/health` warm-up, `GET /api/config` | Hero, 3-step explainer, disclaimer, CTAs | Backend asleep → show "waking server" gracefully | Loads < 2 s on 4G; both CTAs work; disclaimer visible |
 | F2 | Consent + upload | Lawful, informed processing | Checkbox (required), file input / camera (`capture="user"`), photo tips | Resized JPEG blob | Validates consent flag, type, size, dimensions with Pillow; strips metadata | Validate jpg/png < 10 MB, short side ≥ 480 px; downscale long side to ≤ 2048 px; re-encode (strips EXIF and GPS) | Wrong type, too small, too large, no consent | Can't submit without consent; invalid files are rejected with a friendly message; EXIF absent in the uploaded blob |
 | F3 | Analysis (live) | Run YouCam | Image + consent | `analysis_id` | File API → PUT → task → poll → normalise → (optionally) delete task | Progress screen with honest staged messages; polls every 2 s | YouCam errors (`error_no_face`, `error_src_face_too_small`, `error_lighting_dark`, `CreditInsufficiency`, 429, timeout) map to friendly retry guidance | Real result displayed for a good selfie; every listed error shows a specific message; no key in browser |
-| F4 | Sample mode | Judge access and credit saving | "Try recorded sample" | Recorded normalised result plus mask assets | Serves fixture | Badge "Recorded real YouCam result — sample photo" | — | Works with live mode disabled; always labelled |
+| F4 | Sample mode (**not implemented**; labelled demo profiles are used instead, [ADR-005](decisions/ADR-005-demo-provider-and-redesign.md)) | Judge access and credit saving | "Try recorded sample" | Recorded normalised result plus mask assets | Serves fixture | Badge "Recorded real YouCam result — sample photo" | — | Works with live mode disabled; always labelled |
 | F5 | Results | Understand priorities | — | Top 3 priorities, all metrics, skin type | — | Priority cards, metric list with bands, honest-score explainer, "not measured" states | Metric missing → "not measured" | Ranking uses `raw_score`; bands follow [§9](RECOMMENDATION_ENGINE.md); disclaimer present |
-| F6 | Heatmaps | Visual explanation | Toggle a concern, opacity slider | Overlay | Supplies masks (data URLs or URLs) | Stack mask PNGs over the photo with identical box sizing | Mask missing → "no map for this concern" | Masks align within visual tolerance on desktop and mobile; legend explains it's YouCam's detection map |
+| F6 | Heatmaps (**not implemented**; YouCam masks are not requested and the report shows scores only) | Visual explanation | Toggle a concern, opacity slider | Overlay | Supplies masks (data URLs or URLs) | Stack mask PNGs over the photo with identical box sizing | Mask missing → "no map for this concern" | Masks align within visual tolerance on desktop and mobile; legend explains it's YouCam's detection map |
 | F7 | Preferences | Constrain the optimiser | Budget slider, own-already checkboxes, fragrance-free, sensitive, routine size (Minimal ≤ 3 / Balanced ≤ 5 / Complete ≤ 7) | Preference object | Validates | Form with sensible defaults | Budget below the cheapest core routine → warning | Changing any field re-runs recommendations in < 1 s |
 | F8 | Recommendations + routine | Core value | Metrics + preferences | Selected products, AM/PM steps, receipts, coverage %, total, budget status, warnings | Deterministic engine ([§9](RECOMMENDATION_ENGINE.md)) | Routine timeline, product cards with "Why this?" receipts | Infeasible budget → best partial routine + "₦X over" + suggestions | Same input gives the same output; every product has ≥ 1 receipt tied to a measured metric; no conflicting actives on the same night; sunscreen in AM unless owned |
 | F9 | Swap alternative | Choice | "Swap" on a card | New product, re-quoted total | `alternatives` precomputed per slot | Drawer of ≤ 3 alternatives | None suitable → hide swap | Total and coverage update correctly |
@@ -57,7 +59,7 @@ Landing → (Try sample | Analyse my selfie) → Consent + upload → Processing
   - Results are held in memory with a 30-minute TTL.
   - The YouCam task and its files are deleted after retrieval if the endpoint verifies; otherwise state YouCam's 30-day auto-deletion **[V]** ([retention](https://docs.perfectcorp.com/develop/file_retention_period.md)).
   - Privacy notice on the consent screen.
-- **Accessibility:** WCAG 2.1 AA contrast, keyboard navigation, alt text, `aria-live` for progress, and heatmap information also given as text (region and score), never colour alone.
+- **Accessibility:** WCAG 2.1 AA contrast, keyboard navigation, alt text, `aria-live` for progress, and information never given by colour alone (if heatmaps are ever added, their content must also be given as text).
 - **Responsiveness:** 360 px → 1440 px, mobile-first.
 - **Maintainability:** typed models (Pydantic, TypeScript), catalogue as validated JSON, the engine as pure functions with ≥ 90% unit-test coverage.
 

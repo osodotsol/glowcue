@@ -1,0 +1,24 @@
+{
+  "_note": "SYNTHETIC TEST DATA, not a customer result. Structure mirrors the verified YouCam v2.1 SD success response of 1 Nov 2026 (docs/YOUCAM_API.md 6.11): item order, field names and types, error=null, the undocumented per-item 'url' field, and the all / skin_age / resize_image items. All scores are invented; ui_score deliberately differs from raw_score. IDs are absent and every URL field holds the non-URL placeholder '<removed>'.",
+  "status": 200,
+  "data": {
+    "task_status": "success",
+    "error": null,
+    "results": {
+      "output": [
+        {"type": "texture", "raw_score": 58.2, "ui_score": 80, "mask_urls": ["<removed>"], "url": "<removed>"},
+        {"type": "pore", "raw_score": 47.9, "ui_score": 78, "mask_urls": ["<removed>"], "url": "<removed>"},
+        {"type": "oiliness", "raw_score": 41.3, "ui_score": 76, "mask_urls": ["<removed>"], "url": "<removed>"},
+        {"type": "age_spot", "raw_score": 53.6, "ui_score": 79, "mask_urls": ["<removed>"], "url": "<removed>"},
+        {"type": "redness", "raw_score": 81.0, "ui_score": 91, "mask_urls": ["<removed>"], "url": "<removed>"},
+        {"type": "acne", "raw_score": 72.4, "ui_score": 88, "mask_urls": ["<removed>"], "url": "<removed>"},
+        {"type": "dark_circle_v2", "raw_score": 44.7, "ui_score": 77, "mask_urls": ["<removed>"], "url": "<removed>"},
+        {"type": "moisture", "raw_score": 66.8, "ui_score": 84, "mask_urls": ["<removed>"], "url": "<removed>"},
+        {"type": "wrinkle", "raw_score": 88.1, "ui_score": 94, "mask_urls": ["<removed>"], "url": "<removed>"},
+        {"type": "all", "score": 61.5, "url": "<removed>"},
+        {"type": "skin_age", "score": 29, "url": "<removed>"},
+        {"type": "resize_image", "mask_urls": ["<removed>"], "url": "<removed>"}
+      ]
+    }
+  }
+}
