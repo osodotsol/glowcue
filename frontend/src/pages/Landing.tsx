@@ -90,7 +90,7 @@ export function Landing() {
           <MicroLabel className="hidden text-muted sm:inline">One report · two rituals · a short edit</MicroLabel>
         </div>
         <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:grid-rows-[300px_300px] md:gap-4">
-          <div className="relative col-span-1 row-span-2 h-[420px] overflow-hidden rounded-tile md:h-auto">
+          <div className="relative col-span-1 row-span-2 h-auto min-h-[420px] overflow-hidden rounded-tile md:min-h-0">
             <Portrait
               slot="storytelling"
               position="55% 40%"
@@ -110,13 +110,15 @@ export function Landing() {
             <button
               type="button"
               onClick={() => go("shop")}
-              className="group relative h-[204px] overflow-hidden rounded-tile text-left md:h-auto"
+              className="group flex h-auto flex-col overflow-hidden rounded-tile bg-surface text-left"
               aria-label={`${vitC.name}, ${formatPrice(vitC.price)}. Open the edit`}
             >
-              <ProductImage id={vitC.id} alt="" position="50% 40%" className="transition-transform duration-500 group-hover:scale-105" />
-              <span className="absolute inset-x-3 bottom-3 flex items-center justify-between gap-2 rounded-2xl bg-surface/85 px-3 py-2.5 text-[13px]">
-                <strong className="truncate">{vitC.name}</strong>
-                <span>{formatPrice(vitC.price)}</span>
+              <span className="relative aspect-square overflow-hidden md:aspect-auto md:min-h-0 md:flex-1">
+                <ProductImage id={vitC.id} alt="" position="50% 40%" className="absolute inset-0 transition-transform duration-500 group-hover:scale-105" />
+              </span>
+              <span className="flex flex-wrap items-baseline justify-between gap-x-2 gap-y-0.5 px-3 pt-2.5 pb-3 text-[13px] leading-snug">
+                <strong>{vitC.name}</strong>
+                <span className="text-muted">{formatPrice(vitC.price)}</span>
               </span>
             </button>
           )}
@@ -145,15 +147,18 @@ export function Landing() {
               <span className="text-[10px] text-muted">Example screen</span>
             </div>
           </div>
-          <div className="relative col-span-2 h-[240px] overflow-hidden rounded-tile bg-ink md:h-auto">
-            <SceneImage name="night_still" alt="GlowCue evening products in low warm light" position="15% 62%" />
-            <div className="absolute top-5 right-6 flex flex-col items-end gap-2 text-right text-surface">
+          <div className="@container relative col-span-2 flex flex-col overflow-hidden rounded-tile bg-ink [--eve-pos:15%_46%] md:h-auto md:@min-[490px]:block md:@min-[490px]:[--eve-pos:15%_62%]">
+            <div className="relative z-10 flex flex-col items-end gap-2 px-6 pt-5 pb-3 text-right text-surface md:@min-[490px]:absolute md:@min-[490px]:top-5 md:@min-[490px]:right-6 md:@min-[490px]:p-0">
               <MicroLabel className="text-peach">Evening ritual</MicroLabel>
-              <span className="display text-[28px] leading-[1.05] sm:text-[34px]">
+              <span className="display text-[28px] leading-[1.05] sm:text-[34px] md:text-[28px] md:@min-[490px]:text-[34px]">
                 Unwind, renew,
                 <br />
                 <span className="italic">never rush.</span>
               </span>
+            </div>
+            <div className="relative aspect-[19/10] w-full md:aspect-auto md:min-h-0 md:flex-1 md:@min-[490px]:absolute md:@min-[490px]:inset-0 md:@min-[490px]:flex-none">
+              <SceneImage name="night_still" alt="GlowCue evening products in low warm light" position="var(--eve-pos)" className="absolute inset-0" />
+              <span aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-8 bg-gradient-to-b from-ink to-transparent md:@min-[490px]:hidden" />
             </div>
           </div>
         </div>
