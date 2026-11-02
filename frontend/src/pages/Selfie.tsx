@@ -4,6 +4,7 @@ import { Button, InfoNote, ErrorState, Loading, MicroLabel, SceneImage, SectionT
 import { CameraCapture, cameraSupported } from "../components/CameraCapture";
 import { api, ApiError } from "../lib/api";
 import { photoFileProblem } from "../lib/camera";
+import { titleForMessage } from "../lib/errors";
 import { PhotoPrepError, prepareSelfie } from "../lib/imagePrep";
 import { useRemote } from "../lib/useRemote";
 import { useApp } from "../state/AppState";
@@ -94,6 +95,7 @@ function PhotoActions({ hasPhoto }: { hasPhoto: boolean }) {
 // ------------------------------------------------------------------------------------------ live analysis
 type Phase = "idle" | "preparing" | "sending" | "analysing" | "error";
 interface LiveError {
+  title?: string;
   message: string;
   retake: boolean;
   retryable: boolean;
@@ -132,7 +134,15 @@ class LiveFailure extends Error {
 function toLiveError(e: unknown): LiveError {
   if (e instanceof LiveFailure) return e.detail;
   if (e instanceof PhotoPrepError) return { message: e.message, retake: true, retryable: false };
-  if (e instanceof ApiError) return { message: e.message, retake: PHOTO_CODES.has(e.code), retryable: e.retryable };
+  if (e instanceof ApiError) {
+    const connection = e.code === "network" || e.code === "unavailable";
+    return {
+      title: connection ? titleForMessage(e.message) : undefined,
+      message: e.message,
+      retake: PHOTO_CODES.has(e.code),
+      retryable: e.retryable,
+    };
+  }
   return GENERIC_ERROR;
 }
 
@@ -199,19 +209,25 @@ function LiveAnalysisCard({ onUseDemo }: { onUseDemo: () => void }) {
       </h2>
       <p className="text-sm leading-relaxed text-ink-soft">
         GlowCue sends your photo to Perfect Corp&rsquo;s YouCam service for a <strong>cosmetic</strong> analysis of nine skin
-        attributes. It is used only for this analysis. GlowCue never stores it, and asks YouCam to delete it once the analysis is finished. Results
-        depend on the light and the photo, and are not medical advice.
+        attributes. Results depend on the light and the photo, and are not medical advice.
       </p>
-      <label className="flex min-h-11 cursor-pointer items-start gap-3 rounded-2xl bg-bg p-3 text-sm leading-relaxed">
-        <input
-          type="checkbox"
-          checked={consent}
-          disabled={busy}
-          onChange={(e) => setConsent(e.target.checked)}
-          className="mt-0.5 h-5 w-5 shrink-0 accent-terra-deep"
-        />
-        <span>I agree to send this photo to Perfect Corp (YouCam) for a cosmetic skin analysis.</span>
-      </label>
+      <div className="flex flex-col gap-2">
+        <label className="flex min-h-11 cursor-pointer items-start gap-3 rounded-2xl bg-bg p-3 text-sm leading-relaxed">
+          <input
+            type="checkbox"
+            checked={consent}
+            disabled={busy}
+            onChange={(e) => setConsent(e.target.checked)}
+            aria-describedby="consent-note"
+            className="mt-0.5 h-5 w-5 shrink-0 accent-terra-deep"
+          />
+          <span>I agree to send this photo to Perfect Corp (YouCam) for automated skin analysis.</span>
+        </label>
+        <p id="consent-note" className="px-3 text-[13px] leading-relaxed text-ink-soft">
+          Your photo is processed temporarily and is not stored by GlowCue after processing. We request that YouCam deletes its
+          copy after analysis. We cannot independently verify deletion by YouCam.
+        </p>
+      </div>
 
       {busy && (
         <div role="status" aria-live="polite" className="flex items-center gap-3 rounded-2xl bg-bg p-3 text-sm text-ink-soft">
@@ -225,7 +241,8 @@ function LiveAnalysisCard({ onUseDemo }: { onUseDemo: () => void }) {
 
       {error && (
         <div role="alert" className="flex flex-col gap-3 rounded-2xl bg-terra-soft p-4 text-sm text-terra-ink">
-          <p className="font-semibold">{error.message}</p>
+          {error.title && <p className="font-semibold">{error.title}</p>}
+          <p className={error.title ? undefined : "font-semibold"}>{error.message}</p>
           {error.retake && (
             <ul className="flex list-disc flex-col gap-1 pl-5 leading-relaxed">
               {RETAKE_TIPS.map((tip) => (
