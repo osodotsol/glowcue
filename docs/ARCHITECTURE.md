@@ -21,10 +21,10 @@
 **Python note:** your machine has Python 3.14.6 **[V]**. FastAPI and Pydantic support it **[A]**. On Render, set `PYTHON_VERSION` to match. If any wheel fails to install, fall back to 3.12 locally and on Render.
 
 ### 7.2 Responsibilities
-1. **Frontend:** UI, client-side image checks and resize, EXIF stripping, polling, heatmap rendering, preference form, cart state, accessibility.
+1. **Frontend:** UI, client-side image checks and resize, EXIF stripping, polling, preference form, cart state, accessibility.
 2. **Backend:** secrets, YouCam calls, server-side validation, caps and limits, normalisation, catalogue, engine, cart quoting.
 3. **YouCam client (`youcam_client.py`):** the four calls (file, PUT, task, poll) plus delete and credit. Typed exceptions and retries with backoff on 429 / 5xx (max 2).
-4. **Normaliser (`normalize.py`):** raw `output[]` → `NormalizedAnalysis` ([§7.5](DATA_MODEL.md)). Maps `dark_circle_v2` → `dark_circles`, picks `raw_score`, attaches masks, handles missing or unknown types.
+4. **Normaliser (`normalize.py`):** raw `output[]` → `NormalizedAnalysis` ([§7.5](DATA_MODEL.md)). Maps `dark_circle_v2` → `dark_circles`, picks `raw_score`, handles missing or unknown types. Masks are not requested or used (no heatmap is implemented).
 5. **Catalogue (`catalogue.py`):** loads and validates JSON (unique ids, required fields, allowed enums) and fails fast on startup.
 6. **Engine (`engine/`):** pure functions: priorities → candidate filtering → scoring → combination optimiser → explanations.
 7. **Routine builder (`engine/routine.py`):** orders steps, assigns AM/PM, applies conflict and frequency rules.
@@ -64,9 +64,9 @@ flowchart LR
   R --> G --> YC
   YC --> F --> S3
   YC --> T
-  T -- scores + mask URLs --> N --> CACHE
-  YC -. after masks fetched .-> D
-  R -- sample --> FIX
+  T -- scores --> N --> CACHE
+  YC -. after results are read .-> D
+  R -- sample: not implemented --> FIX
   CACHE --> R
   UI -- metrics + preferences --> R --> ENG
   CAT --> ENG
@@ -108,7 +108,7 @@ glowcue/
 │  │  ├─ engine/ (concerns.py, scoring.py, optimiser.py, routine.py, explain.py)
 │  │  ├─ models.py              # Pydantic schemas
 │  │  ├─ data/catalogue.json
-│  │  └─ fixtures/ (raw_response.sanitised.json, sample_analysis.json, sample_masks/, sample_photo.jpg)
+│  │  └─ fixtures/raw/ (gitignored probe output; the planned sample files and masks were not created)
 │  ├─ scripts/probe_youcam.py   # one-off Phase-2 probe (manual run only)
 │  └─ tests/ (test_normalize.py, test_engine_*.py, test_routes.py, test_catalogue.py)
 └─ frontend/
@@ -120,10 +120,10 @@ glowcue/
    │  ├─ styles/ (index.css → Tailwind theme tokens)
    │  ├─ lib/ (api.ts, imagePrep.ts, format.ts, types.ts)
    │  ├─ state/ (SessionContext.tsx, CartContext.tsx)
-   │  ├─ components/ (Button, Card, Badge, ScoreBar, HeatmapViewer, ProductCard, ReceiptList,
+   │  ├─ components/ (Button, Card, Badge, ScoreBar, ProductCard, ReceiptList,
    │  │               RoutineTimeline, BudgetMeter, Disclaimer, ErrorState, Stepper, Drawer)
    │  └─ pages/ (Landing, Analyze, Processing, Results, Preferences, Routine, Cart, Checkout, NotFound)
-   └─ e2e/smoke.spec.ts         # Playwright, mock mode
+   └─ e2e/smoke.spec.ts         # Playwright, mock mode (planned; not created)
 ```
 
 ---

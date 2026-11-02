@@ -8,6 +8,9 @@ This is the shared source of truth for the owner, Claude Code and Antigravity. *
 | Product | [PRODUCT_BRIEF.md](PRODUCT_BRIEF.md) | Strategy, differentiation, brand check, feature classification |
 | | [PRD.md](PRD.md) | Requirements, functional spec, NFRs, MVP scope, definition of done |
 | | [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md) | Visual tokens, flow, screen-by-screen spec, assets |
+| | [ASSETS.md](ASSETS.md) | Image and font register: product renders (cleared), temporary portraits (not cleared), replacement steps |
+| | [decisions/ADR-005](decisions/ADR-005-demo-provider-and-redesign.md) | Demo analysis without the photo; Edition 2 implementation choices |
+| | [decisions/ADR-006](decisions/ADR-006-live-youcam-analysis.md) | Live YouCam analysis: job polling, raw-body upload, 9 SD actions, safeguards |
 | Technical | [ARCHITECTURE.md](ARCHITECTURE.md) | Stack, responsibilities, diagram, directory layout |
 | | [API_CONTRACTS.md](API_CONTRACTS.md) | GlowCue HTTP endpoints (backend ↔ frontend) |
 | | [DATA_MODEL.md](DATA_MODEL.md) | Shared data shapes |

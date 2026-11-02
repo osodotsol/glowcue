@@ -66,6 +66,15 @@ Command inspection can never be the *decisive* control. These requirements make 
 | B5 | **Tests for B1-B3:** a `.env` value wins over a conflicting environment variable; a live-mode call without the second flag is refused; the choke point is the only module that mentions the YouCam base URL (a test checks the source); the client in mock mode raises on `send`. | Keeps the controls from regressing. |
 | B6 | **Live endpoints stay off by default** (`LIVE_ANALYSIS_ENABLED=false`) and the sample endpoint never calls YouCam. | Visitors cannot trigger spending unless the owner switches it on. |
 
+**Implementation status (Phase A, 1 Nov 2026, tested offline):**
+- **B1:** `Settings.settings_customise_sources` orders init, `backend/.env`, then environment (`backend/app/config.py`). The YouCam host is no longer configurable.
+- **B2:** `YouCamClient._send` in `backend/app/services/youcam_client.py` is the only route to YouCam. It refuses unless mode, kill switch and key line up. The credit floor is read (free call) before any upload; the daily caps are enforced in `services/limits.py` before the photo is accepted.
+- **B3:** outside live mode the client is built with a transport that raises on any request, even if a transport is passed in.
+- **B4:** a startup log line reports the mode, the kill switch and whether a key is present.
+- **B5:** `backend/tests/test_live_safeguards.py`, including source scans: only `youcam_client.py` mentions the host or imports httpx.
+- **B6:** `LIVE_ANALYSIS_ENABLED` defaults to false; `POST /api/analyses` answers `503 live_unavailable` until the owner enables it.
+- **Also:** consent is checked before the photo is read; photos are read as a capped raw body (never spooled to disk), checked by signature, re-encoded into a fresh metadata-free JPEG in memory, and dropped after upload; the YouCam task is deleted after success or a task error; the `httpx`/`httpcore` loggers are held at WARNING so request URLs (presigned upload URLs, task ids) are never logged.
+
 ### 4.5 Why mock mode is the default
 1. **Units are scarce and irreplaceable:** 1,000 units is roughly 71 analyses, and judging runs to 21 Nov. Every accidental call lowers what judges can try.
 2. **A safe default makes mistakes cheap:** a forgotten setting, a stray test or a copied command costs nothing in mock mode.

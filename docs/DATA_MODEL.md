@@ -23,3 +23,15 @@ RecommendationResult { priorities: [ {key,label,band,why_text} ],
 Receipt       { concern_key, metric_raw_score, ingredient, claim_text }   # e.g. "Texture 41/100 → lactic acid → evens the look of rough texture"
 Step          { order, product_id, instruction, frequency: "daily"|"2-3x weekly", note }
 ```
+
+**Implemented shapes (1 Nov 2026).** The block above is the planning snapshot; the code is authoritative
+(`backend/app/models.py`, mirrored in `frontend/src/lib/types.ts`):
+
+```text
+Metric             { key: <9 concern keys>, label, raw_score: float 1-100|null, ui_score: int|null, band }
+NormalizedAnalysis { analysis_id, mode: "demo"|"live", provider, is_demo, profile_id|null, metrics: [Metric],
+                     skin_type|null, notice }   # live: is_demo=false, skin_type=null (not requested), raw_score only
+AnalysisJob        { analysis_id, status: "running"|"success"|"error", analysis: NormalizedAnalysis|null,
+                     error: ErrorDetail|null }
+ErrorDetail        { code, message, retryable, retake }   # retake=true: another photo is likely to fix it
+```
