@@ -12,6 +12,7 @@ import type {
   RecommendationResult,
   SkinType,
 } from "./types";
+import { CONNECTION_ERROR, friendlyForHttpFailure, isServiceUnavailableStatus } from "./errors";
 
 const BASE = (import.meta.env.VITE_API_BASE_URL as string | undefined) ?? "http://localhost:8000";
 
@@ -25,6 +26,12 @@ export class ApiError extends Error {
   }
 }
 
+/** Technical details for developers only (the console). Never the request body, so a photo can never reach a log. */
+function logRequestFailure(path: string, reason: string | number, cause?: unknown) {
+  const detail = cause instanceof Error ? `${cause.name}: ${cause.message}` : undefined;
+  console.warn("[glowcue] request failed", { path, reason, online: navigator.onLine, detail });
+}
+
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   let response: Response;
   try {
@@ -32,13 +39,22 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
       ...init,
       headers: init?.headers ?? (init?.body ? { "Content-Type": "application/json" } : undefined),
     });
-  } catch {
-    throw new ApiError("network", "We couldn't reach the GlowCue server. Is the backend running?", true);
+  } catch (cause) {
+    logRequestFailure(path, "network", cause);
+    throw new ApiError("network", CONNECTION_ERROR.message, true);
   }
   const body: unknown = await response.json().catch(() => null);
   if (!response.ok) {
     const err = (body as { error?: { code?: string; message?: string; retryable?: boolean } } | null)?.error;
-    throw new ApiError(err?.code ?? "http_error", err?.message ?? `Request failed (${response.status})`, !!err?.retryable);
+    if (err?.message) {
+      // GlowCue's own answer (already written for customers): keep it.
+      throw new ApiError(err.code ?? "http_error", err.message, !!err.retryable);
+    }
+    // No message of its own, for example a gateway page while the service starts up: say so plainly.
+    logRequestFailure(path, response.status);
+    const friendly = friendlyForHttpFailure(response.status);
+    const unavailable = isServiceUnavailableStatus(response.status);
+    throw new ApiError(unavailable ? "unavailable" : (err?.code ?? "http_error"), friendly.message, response.status >= 500);
   }
   return body as T;
 }

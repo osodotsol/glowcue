@@ -1,4 +1,5 @@
 import { useEffect, useState, type ButtonHTMLAttributes, type CSSProperties, type ReactNode, type Ref } from "react";
+import { titleForMessage } from "../lib/errors";
 import type { Band } from "../lib/types";
 
 // ------------------------------------------------------------------ buttons
@@ -236,10 +237,10 @@ export function Loading({ label }: { label: string }) {
   );
 }
 
-export function ErrorState({ message, onRetry }: { message: string; onRetry?: () => void }) {
+export function ErrorState({ message, title, onRetry }: { message: string; title?: string; onRetry?: () => void }) {
   return (
     <Card className="text-center">
-      <p className="font-medium">We couldn't load this just now</p>
+      <p className="font-medium">{title ?? titleForMessage(message)}</p>
       <p className="mt-1 text-sm text-muted">{message}</p>
       {onRetry && (
         <Button variant="outline" className="mt-4" onClick={onRetry}>

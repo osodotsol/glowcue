@@ -1,4 +1,5 @@
 import { ArrowDisc, BandBar, Button, CueMark, GlowArc, HeroVideo, MicroLabel, Portrait, ProductImage, SceneImage } from "../components/ui";
+import { titleForMessage } from "../lib/errors";
 import { formatPrice } from "../lib/format";
 import { useApp } from "../state/AppState";
 
@@ -51,7 +52,10 @@ export function Landing() {
           </ul>
           {loadError && (
             <div role="alert" className="flex flex-wrap items-center gap-3 rounded-2xl bg-terra-soft px-4 py-3 text-sm text-terra-ink">
-              GlowCue is temporarily unavailable. Please try again in a moment.
+              <span className="flex flex-col gap-0.5">
+                <strong className="font-semibold">{titleForMessage(loadError)}</strong>
+                <span>{loadError}</span>
+              </span>
               <Button variant="outline" onClick={retryLoad}>
                 Retry
               </Button>

@@ -181,6 +181,11 @@ Design: [ADR-006](decisions/ADR-006-live-youcam-analysis.md). Facts and open que
 - **Rights:** the licence of these files is **not verified** (O9). This is an owner-approved exception, recorded in [ASSETS.md](ASSETS.md).
 - **Photo guard:** on the owner's instruction, `scripts/security/secret_patterns.py` now allows exactly these brand files (`PHOTO_ALLOWED_FILES`); every other photograph outside the approved folders, including anything else in `frontend/public/brand/`, is still refused. Ten new guard tests cover the allowed and still-blocked paths.
 
+### Friendlier connection errors and photo-consent wording (2 Nov 2026)
+- **Errors:** a failed request now shows "We're having trouble connecting." with "Check your internet connection or move somewhere with a stronger network, then try again." Gateway failures (502/503/504) say "GlowCue is temporarily unavailable." instead, and other failures without a message say "Something went wrong." Messages written by the API are kept as they are. Customers no longer see words like backend, server, API or localhost; status codes and the underlying error go to the browser console only (`frontend/src/lib/errors.ts`, `lib/api.ts`). The landing page, shop, routine, cart, selfie page and live-analysis error box share this wording.
+- **Consent:** the checkbox now reads "I agree to send this photo to Perfect Corp (YouCam) for automated skin analysis." and the explanation sits directly under it: processed temporarily, not stored by GlowCue, GlowCue requests deletion from YouCam, and GlowCue cannot independently verify that deletion. Consent is still required before upload and the Analyse button stays disabled until it is given.
+- **Known behaviour, unchanged:** if the connection drops while a live analysis is already running, "Try again" starts a new upload, which could be a second analysis.
+
 ## Outstanding tasks and owner actions
 | # | Action | Owner | Blocks |
 |---|---|---|---|
