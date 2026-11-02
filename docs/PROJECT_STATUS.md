@@ -186,6 +186,11 @@ Design: [ADR-006](decisions/ADR-006-live-youcam-analysis.md). Facts and open que
 - **Consent:** the checkbox now reads "I agree to send this photo to Perfect Corp (YouCam) for automated skin analysis." and the explanation sits directly under it: processed temporarily, not stored by GlowCue, GlowCue requests deletion from YouCam, and GlowCue cannot independently verify that deletion. Consent is still required before upload and the Analyse button stays disabled until it is given.
 - **Known behaviour, unchanged:** if the connection drops while a live analysis is already running, "Try again" starts a new upload, which could be a second analysis.
 
+### Landing page layout polish (2 Nov 2026)
+- **Evening tile:** the "Unwind, renew, never rush." headline touched the dropper bottle's cap at phone widths and the bottle or tube at tablet widths. It still overlays the photo exactly as before when the tile is at least 490 px wide on tablet and up (roughly 1120 px viewports and wider). Narrower tiles put the headline in a band above the photo. Browsers without container-query support get the band layout, which cannot overlap.
+- **Vitamin C tile:** the name and price used to sit on top of the product picture and the name was cut off ("Vitamin ..."). They now sit under the picture with the full name. The picture frame is square on phones so the whole bottle shows at every width.
+- **Checked:** across 69 widths from 360 to 1500 px the headline never overlaps a product, no product is cropped, and the caption never overlaps or truncates. Before-and-after screenshots are in `docs/screenshots/landing-layout-polish/`.
+
 ## Outstanding tasks and owner actions
 | # | Action | Owner | Blocks |
 |---|---|---|---|
