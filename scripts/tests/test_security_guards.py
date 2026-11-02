@@ -130,6 +130,17 @@ def test_placeholders_and_code_are_not_flagged(line):
         ("backend/app/fixtures/sample_photo.jpg", True),
         ("frontend/public/products/gc-cln-01.svg", False),
         ("docs/screenshots/results.jpg", False),
+        # brand imagery: exactly the owner-approved files, nothing else in that folder
+        ("frontend/public/brand/portraits/p2-consultation.webp", False),
+        ("frontend/public/brand/portraits/p3-storytelling.webp", False),
+        ("frontend/public/brand/videos/glowcue-hero-poster.webp", False),
+        ("frontend\\public\\brand\\portraits\\p2-consultation.webp", False),
+        ("frontend/public/brand/portraits/p1-hero.webp", True),
+        ("frontend/public/brand/portraits/new-portrait.jpg", True),
+        ("frontend/public/brand/videos/glowcue-hero-still.webp", True),
+        ("Frontend/Public/Brand/portraits/p2-consultation.webp", True),
+        ("frontend/public/brand/portraits/sub/p2-consultation.webp", True),
+        ("frontend/public/private/portraits/p2-consultation.webp", True),
         ("certs/server.pem", True),
     ],
 )

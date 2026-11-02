@@ -1,9 +1,6 @@
-import { ArrowDisc, BandBar, Button, CueMark, GlowArc, HeroVideo, MicroLabel, Portrait, ProductImage, SceneImage, USE_PRIVATE_ASSETS } from "../components/ui";
+import { ArrowDisc, BandBar, Button, CueMark, GlowArc, HeroVideo, MicroLabel, Portrait, ProductImage, SceneImage } from "../components/ui";
 import { formatPrice } from "../lib/format";
 import { useApp } from "../state/AppState";
-
-const TEMP_PHOTO_NOTE =
-  "Temporary photography and film supplied by the owner for this demo; licence not yet verified and replaced before any public release. Brand imagery only, never analysed.";
 
 const HERO_LABEL =
   "Short looping film: a woman with deep skin tone, hair in a low bun, gently touching her cheek and jaw against a warm beige backdrop";
@@ -72,16 +69,12 @@ export function Landing() {
               <ProductImage id={vitC.id} alt={`${vitC.name}, GlowCue studio render`} position="50% 38%" />
             </div>
           )}
-          {USE_PRIVATE_ASSETS && (
-            <p className="absolute top-[492px] left-[200px] max-w-[380px] text-[11px] leading-relaxed text-muted">{TEMP_PHOTO_NOTE}</p>
-          )}
           <div className="absolute top-[580px] left-0 flex gap-6 text-ink">
             <MicroLabel>Considered</MicroLabel>
             <MicroLabel>Personal</MicroLabel>
             <MicroLabel>Honest</MicroLabel>
           </div>
         </div>
-        {USE_PRIVATE_ASSETS && <p className="px-4 pt-3 text-[11px] leading-relaxed text-muted md:hidden">{TEMP_PHOTO_NOTE}</p>}
       </section>
 
       {/* ---------------------------------------------------------------- meet your edition */}

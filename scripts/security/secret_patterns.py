@@ -56,6 +56,17 @@ FORBIDDEN_PATH_PATTERNS = (
 # and anywhere else only with explicit owner approval (GLOWCUE_PHOTO_APPROVED=1).
 PHOTO_EXTENSIONS = {".jpg", ".jpeg", ".heic", ".heif", ".webp"}
 PHOTO_ALLOWED_PREFIXES = ("frontend/public/products/", "docs/screenshots/", ".github/")
+# Brand imagery the owner explicitly decided to publish (2 Nov 2026; licence not yet verified, docs/ASSETS.md).
+# Exact paths only: any other photograph in frontend/public/brand/ is still refused. (The .mp4 is listed for
+# completeness; video files are not covered by the photograph rule.)
+PHOTO_ALLOWED_FILES = frozenset(
+    {
+        "frontend/public/brand/portraits/p2-consultation.webp",
+        "frontend/public/brand/portraits/p3-storytelling.webp",
+        "frontend/public/brand/videos/glowcue-hero-poster.webp",
+        "frontend/public/brand/videos/glowcue-hero.mp4",
+    }
+)
 
 
 # ---- Guardrail files ---------------------------------------------------------------------------
@@ -99,6 +110,6 @@ def forbidden_path_reason(path: str, photo_approved: bool = False) -> str | None
         if pattern.search(p):
             return f"forbidden file type/location ({pattern.pattern})"
     is_photo = PurePosixPath(p).suffix.lower() in PHOTO_EXTENSIONS
-    if is_photo and not photo_approved and not p.startswith(PHOTO_ALLOWED_PREFIXES):
+    if is_photo and not photo_approved and not p.startswith(PHOTO_ALLOWED_PREFIXES) and p not in PHOTO_ALLOWED_FILES:
         return "photograph outside approved folders (set GLOWCUE_PHOTO_APPROVED=1 only with owner approval)"
     return None

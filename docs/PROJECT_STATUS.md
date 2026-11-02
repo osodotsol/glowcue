@@ -72,7 +72,7 @@ Approved design: the private design canvas (Edition 2). Decisions: [ADR-005](dec
 
 Other checks: backend 123 passed · guard tests 367 passed, 3 xfailed · ruff clean · validator 307/307 · secret scan OK · frontend lint, typecheck and build clean (JS 92 KB gzipped) · production dependencies: 0 vulnerabilities.
 
-Limitations: the portraits and hero film are temporary, licence unverified and git-ignored (O9). The renders read as clean 3D, not lens photography. View Transitions need a supporting browser (others switch instantly).
+Limitations: the portraits and hero film have an unverified licence (O9); they are published from `frontend/public/brand/` by the owner's decision of 2 Nov 2026. The renders read as clean 3D, not lens photography. View Transitions need a supporting browser (others switch instantly).
 
 ## Live YouCam integration, Phase A (1 Nov 2026, offline build, uncommitted)
 Design: [ADR-006](decisions/ADR-006-live-youcam-analysis.md). Facts and open questions: [YOUCAM_API](YOUCAM_API.md) §6.9. Safeguards B1–B6: [SECURITY_PRIVACY](SECURITY_PRIVACY.md) §4.4.
@@ -174,6 +174,13 @@ Design: [ADR-006](decisions/ADR-006-live-youcam-analysis.md). Facts and open que
 - Photo deletion: GlowCue *requests* deletion from YouCam after processing. The request is accepted, but deletion cannot be independently verified, so no document or screen promises it. See [YOUCAM_API.md](YOUCAM_API.md).
 - README report labels now match the interface ("Sample report" / "Your skin report"); the header and phases table above were brought up to date.
 
+### Brand visuals restored to production (2 Nov 2026, uncommitted)
+- **Why:** the production build showed studio renders where the local app shows the two portraits and the hero film. The owner asked for the original visuals to be public.
+- **What:** `p2-consultation.webp`, `p3-storytelling.webp`, `glowcue-hero.mp4` and `glowcue-hero-poster.webp` were copied unchanged from `frontend/public/private/` to `frontend/public/brand/` and are read from `/brand/...`. Placement, crops, the hero frame box and the reduced-motion poster are unchanged. The three unused private files stay local. The 20 approved product and scene images are untouched.
+- **Guard:** `check-build-assets.mjs` still blocks `private/` and any `/private/` reference, and now also requires `dist/brand/` to hold exactly the four approved files (checked against five deliberately broken builds).
+- **Rights:** the licence of these files is **not verified** (O9). This is an owner-approved exception, recorded in [ASSETS.md](ASSETS.md).
+- **Photo guard:** on the owner's instruction, `scripts/security/secret_patterns.py` now allows exactly these brand files (`PHOTO_ALLOWED_FILES`); every other photograph outside the approved folders, including anything else in `frontend/public/brand/`, is still refused. Ten new guard tests cover the allowed and still-blocked paths.
+
 ## Outstanding tasks and owner actions
 | # | Action | Owner | Blocks |
 |---|---|---|---|
@@ -185,7 +192,7 @@ Design: [ADR-006](decisions/ADR-006-live-youcam-analysis.md). Facts and open que
 | O6 | Decide whether the sample photo is your selfie or a neutral silhouette (asked in prompt 04) | Owner | Phase 2 |
 | O7 | **Tell me whether you saw a permission prompt** for the harmless check command containing the word `yce-api` (it printed text only and made no network call), and for my edits to hook, settings and test files. If you saw none, the gate does not reach you in your current mode and must be revisited before Phase 2. | Owner | Trusting the live-call gate |
 | O8 | On prompts about YouCam or guardrails, choose the one-time **Yes**, never "don't ask again" | Owner | L1 |
-| O9 | Replace the three temporary portraits with cleared photographs and fill the table in [ASSETS.md](ASSETS.md) | Owner | Any public demo, deployment or video |
+| O9 | Confirm the licence of the published portraits and hero film (or replace them with cleared photographs) and fill the table in [ASSETS.md](ASSETS.md) | Owner | Public release: the files are already published by owner decision (2 Nov), licence unverified |
 | O10 | Approve how to commit the current work (security stage and product slice plus Edition 2) | Owner | PR |
 | O11 | Review Phase A, then authorise the first controlled live test (probe steps in the Phase A report). Live mode is switched on only by you, in `backend/.env` | Owner | Phase B |
 
