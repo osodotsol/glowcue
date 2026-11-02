@@ -1,0 +1,17 @@
+# Repo-wide Python lint/format config (backend app, repo scripts, Claude Code hooks).
+line-length = 120
+target-version = "py312"
+extend-exclude = ["backend/.venv", "frontend"]
+
+[lint]
+select = ["E", "F", "I", "B", "UP", "S", "SIM"]
+ignore = ["S101"]  # assert is idiomatic in pytest
+
+[lint.isort]
+known-first-party = ["app", "secret_patterns"]
+
+[lint.per-file-ignores]
+"backend/tests/**" = ["S105", "S106"]
+# Repo tooling intentionally runs fixed git/python/ruff subprocesses and must never crash an edit.
+"scripts/**" = ["S603", "S607"]
+".claude/hooks/**" = ["S603", "S607", "S105", "S110", "SIM105"]

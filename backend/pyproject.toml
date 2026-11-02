@@ -1,0 +1,12 @@
+[project]
+name = "glowcue-backend"
+version = "0.1.0"
+description = "GlowCue API: YouCam-powered cosmetic skincare recommendations"
+requires-python = ">=3.12"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-ra"
+
+# Ruff configuration lives in the repo-root ruff.toml (shared with scripts/ and .claude/hooks/).

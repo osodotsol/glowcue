@@ -1,0 +1,33 @@
+@import "tailwindcss";
+
+/* GlowCue design tokens (docs/DESIGN_SYSTEM.md §8.1). Components use these; never raw hex. */
+@theme {
+  --color-bg: #f7f3ee;
+  --color-surface: #ffffff;
+  --color-ink: #1f1d1b;
+  --color-muted: #6b645c;
+  --color-sage: #5e7a64;
+  --color-sage-soft: #e4ebe3;
+  --color-clay: #c47f5a;
+  --color-line: #e7e0d7;
+
+  --font-display: "Fraunces", Georgia, serif;
+  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --radius-card: 1rem;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

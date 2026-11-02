@@ -1,0 +1,7 @@
+#!/bin/sh
+# GlowCue pre-commit hook (enabled with: git config core.hooksPath .githooks)
+# Deterministic last line of defence against committing secrets, .env files or private photos.
+python scripts/security/check_secrets.py --staged || {
+  echo "pre-commit: blocked. Fix the files above (never use --no-verify)." >&2
+  exit 1
+}
